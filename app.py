@@ -25,6 +25,7 @@ All_books = Base.classes.all_books
 #################################################
 # Flask Setup
 #################################################
+
 app = Flask(__name__)
 
 #################################################
@@ -36,12 +37,14 @@ def welcome():
     """List all available api routes."""
     return (
         f"Available Routes:<br/>"
-        f"/api/v1.0/names<br/>"
-        f"/api/v1.0/passengers"
+        f"/api/v1.0/archvisdata<br/>"
+        f"/api/v1.0/scattervisdata<br/>"
+        f"/api/v1.0/adelavisdata<br/>"
+        f"/api/v1.0/wordcloudvisdata"
     )
 
 
-@app.route("/api/v1.0/names")
+@app.route("/api/v1.0/archvisdata")
 def names():
     # Create our session (link) from Python to the DB
     session = Session(engine)
