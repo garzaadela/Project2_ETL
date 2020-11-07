@@ -45,7 +45,7 @@ def welcome():
 
 
 @app.route("/api/v1.0/archvisdata")
-def names():
+def arch():
     # Create our session (link) from Python to the DB
     session = Session(engine)
 
@@ -66,6 +66,21 @@ def names():
 
     return jsonify(authors_publishers)
 
+@app.route("/api/v1.0/wordcloudvisdata")
+def wordcloud():
+    # Create our session (link) from Python to the DB
+    session = Session(engine)
+
+    """Return a list of all passenger names"""
+    # Query all passengers
+    results = session.query(Nyt_data.description).all()
+
+    session.close()
+
+    # Convert list of tuples into normal list
+    descriptions = list(np.ravel(results))
+
+    return jsonify(descriptions)
 
 if __name__ == '__main__':
     app.run(debug=True)
