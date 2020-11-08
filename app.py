@@ -4,7 +4,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 from config import postrespw
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 
 #################################################
 # Database Setup
@@ -26,7 +26,7 @@ All_books = Base.classes.all_books
 # Flask Setup
 #################################################
 
-app = Flask(__name__)
+app = Flask(__name__.split('.')[0])
 
 #################################################
 # Flask Routes
@@ -35,13 +35,13 @@ app = Flask(__name__)
 @app.route("/")
 def welcome():
     """List all available api routes."""
-    return (
-        f"Available Routes:<br/>"
-        f"/api/v1.0/archvisdata<br/>"
-        f"/api/v1.0/scattervisdata<br/>"
-        f"/api/v1.0/adelavisdata<br/>"
-        f"/api/v1.0/wordcloudvisdata"
-    )
+    return render_template("home.html")
+        # f"Available Routes:<br/>"
+        # f"/api/v1.0/archvisdata<br/>"
+        # f"/api/v1.0/scattervisdata<br/>"
+        # f"/api/v1.0/adelavisdata<br/>"
+        # f"/api/v1.0/wordcloudvisdata"
+    
 
 
 @app.route("/api/v1.0/archvisdata")
@@ -82,5 +82,5 @@ def wordcloud():
 
     return jsonify(descriptions)
 
-if __name__ == '__main__':
+if __name__.split('.')[0] == '__main__':
     app.run(debug=True)
