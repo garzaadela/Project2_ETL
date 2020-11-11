@@ -1,18 +1,18 @@
 function wordCloud(selector) {
 
-  var fill = d3.scale.category20();
+  let fill = d3.scale.category20();
 
   //Construct the word cloud's SVG element
-  var svg = d3.select(selector).append("svg")
-      .attr("width", 500)
-      .attr("height", 500)
+  let svg = d3.select(selector).append("svg")
+      .attr("width", 750)
+      .attr("height", 750)
       .append("g")
-      .attr("transform", "translate(250,250)");
+      .attr("transform", "translate(310, 350)");
 
 
   //Draw the word cloud
   function draw(words) {
-      var cloud = svg.selectAll("g text")
+      let cloud = svg.selectAll("g text")
                       .data(words, function(d) { return d.text; })
 
       //Entering words
@@ -48,12 +48,9 @@ function wordCloud(selector) {
   // expose only the parts that need to be public.
   return {
 
-      //Recompute the word cloud for a new set of words. This method will
-      // asycnhronously call draw when the layout has been computed.
-      //The outside world will need to call this function, so make it part
-      // of the wordCloud return value.
+
       update: function(words) {
-          d3.layout.cloud().size([500, 500])
+          d3.layout.cloud().size([600, 600])
               .words(words)
               .padding(5)
               .rotate(function() { return ~~(Math.random() * 2) * 90; })
@@ -66,25 +63,23 @@ function wordCloud(selector) {
 
 }
 
-//Some sample data - http://en.wikiquote.org/wiki/Opening_lines
-var words = [
-  "Feliz Cumpleaños Deisy, sabes que te quiero muchísimo, un fuerte abrazo"
-]
+//need to make these words come from db somehow
+d3.json("http://127.0.0.1:5000/api/v1.0/wordcloudvisdata", function(data) {
+    let words = data;
+    console.log(words);
+
 
 //Prepare one of the sample sentences by removing punctuation,
 // creating an array of words and computing a random size attribute.
 function getWords(i) {
   return words[i]
-          .replace(/[!\.,:;\?]/g, '')
+          .replace(/[!\.,:;\?"]/g, '')
           .split(' ')
           .map(function(d) {
               return {text: d, size: 10 + Math.random() * 60};
           })
 }
 
-//This method tells the word cloud to redraw with a new set of words.
-//In reality the new words would probably come from a server request,
-// user input or some other source.
 function showNewWords(vis, i) {
   i = i || 0;
 
@@ -93,7 +88,8 @@ function showNewWords(vis, i) {
 }
 
 //Create a new instance of the word cloud visualisation.
-var myWordCloud = wordCloud('body');
+let myWordCloud = wordCloud('#word-cloud');
 
 //Start cycling through the demo data
 showNewWords(myWordCloud);
+});
