@@ -3,7 +3,6 @@ import sqlalchemy
 from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
-from config import postrespw
 from flask import Flask, jsonify, render_template
 from models import create_classes
 import os
@@ -44,20 +43,20 @@ def thedata():
 @app.route("/api/v1.0/archvisdata")
 def arch():
 
-    results = db.session.query(Books.publisher, func.count(Books.primary_isbn_13)).\
-    group_by(Books.publisher).\
-    order_by(func.count(Books.primary_isbn_13)).all()
+    results = db.session.query(Books.publisher, func.count(Books.primary_isbn_13), func.avg(Books.average_rating)).group_by(Books.publisher).order_by(func.count(Books.primary_isbn_13)).all()
 
     authors_publishers = []
 
-    for publisher, count in results:
+    for publisher, count, avg in results:
 
         link_dict = {}
         link_dict["source"]=publisher
         link_dict["target"]=count
+        link_dict["avg"]=round(avg, 2)
         authors_publishers.append(link_dict)
-
+   
     return jsonify(authors_publishers)
+
 
 
 @app.route("/api/v1.0/wordcloudvisdata")
